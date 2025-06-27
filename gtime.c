@@ -27,12 +27,46 @@
 
 #define _DEFAULT_SOURCE 1
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
 #include "gtime.h"
+
+#define SECONDS_PER_MINUTE 60
+#define SECONDS_PER_HOUR   60 * SECONDS_PER_MINUTE
+#define SECONDS_PER_DAY    24 * SECONDS_PER_HOUR
+#define SECONDS_PER_WEEK   7 * SECONDS_PER_DAY
+#define DAYS_PER_400_YEARS (365*400 + 97)
+
+#define MARCH_THRU_DECEMBER (31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30 + 31)
+
+// absoluteYears is the number of years we subtract from internal time to get
+// absolute time. This value must be 0 mod 400, and it defines the "absolute
+// zero instant" mentioned in the "Computations on Times" comment above: March
+// 1, -absoluteYears. Dates before the absolute epoch will not compute
+// correctly, but otherwise the value can be changed as needed.
+#define ABSOLUTE_YEARS = 292277022400
+
+// The year of the zero Time. Assumed by the unixToInternal computation below.
+#define INTERNAL_YEAR 1
+
+// Offsets to convert between internal and absolute or Unix times.
+#define ABSOLUTE_TO_INTERNAL (int64_t)(-(ABSOLUTE_YEARS*365.2425 + MARCH_THRU_DECEMBER) * SECONDS_PER_DAY)
+#define INTERNAL_TO_ABSOLUTE (-ABSOLUTE_TO_INTERNAL)
+#define UNIX_TO_INTERNAL (int64_t)((1969*365 + 1969/4 - 1969/100 + 1969/400) * SECONDS_PER_DAY)
+#define INTERNAL_TO_UNIX (int64_t)(-unixToInternal)
+#define ABSOLUTE_TO_UNIX = (ABSOLUTE_TO_INTERNAL + INTERNAL_TO_UNIX)
+#define UNIX_TO_ABSOLUTE = (UNIX_TO_INTERNAL + INTERNAL_TO_ABSOLUTE)
+#define WALL_TO_INTERNAL (inte64_t)((1884*365 + 1884/4 - 1884/100 + 1884/400) * SECONDS_PER_DAY)
+
+#define HAS_MONOTONIC (int64_t)(1 << 63)
+#define MAX_WALL (WALL_TO_INTERNAL + (1<<3 -1)) // year 2157
+#define MIN_WALL WALL_TO_INTERNAL // 1885
+#define NSEC_MASK (int64_t)(1<<30)-1
+#define NSEC_SHIFT (int64_t)30
 
 gtime_t
 gtime_now()
@@ -50,6 +84,12 @@ int64_t
 gtime_unix(const gtime_t t)
 {
     return (int64_t)t.seconds;
+}
+
+bool
+gtime_is_leap_year(int64_t year)
+{
+    return ((year & 3) == 0 && ((year % 25) != 0 || (year & 15) == 0));
 }
 
 void

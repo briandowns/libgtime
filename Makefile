@@ -22,7 +22,7 @@ endif
 
 .PHONY: tests
 tests: clean
-	$(CC) -o tests/tests tests/unity.c tests/tests.c gtime.c $(CFLAGS) $(LDFLAGS)
+	$(CC) -o tests/tests tests/crosscheck.c gtime.c tests/tests.c $(CFLAGS) $(LDFLAGS)
 	tests/tests
 	rm -f tests/tests
 

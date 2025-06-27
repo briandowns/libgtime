@@ -32,8 +32,10 @@ extern "C" {
 #ifndef __GTIME_H
 #define __GTIME_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct {
     time_t seconds;
@@ -52,11 +54,23 @@ typedef int64_t gtime_duration_t;
 #define GTIME_MINUTE      (gtime_duration_t)(60 * GTIME_SECOND)
 #define GTIME_HOUR        (gtime_duration_t)(60 * GTIME_MINUTE)
 
+/**
+ * Returns the current local time.
+ */
 gtime_t
 gtime_now();
 
+/**
+ * Returns the number of seconds elapsed since January 1, 1970 UTC.
+ */
 int64_t
 gtime_unix(const gtime_t t);
+
+/**
+ * Determines if the given year is a leap year.
+ */
+bool
+gtime_is_leap_year(int64_t year);
 
 void
 gtime_format(const gtime_t t, const char *layout, char *out, size_t out_size);
