@@ -75,6 +75,12 @@ gtime_is_leap_year(int64_t year);
 void
 gtime_format(const gtime_t t, const char *layout, char *out, size_t out_size);
 
+uint8_t
+gtime_day(const gtime_t t);
+
+bool
+gtime_equal(const gtime_t t1, const gtime_t t2);
+
 gtime_duration_t
 gtime_duration_new(const int64_t d);
 
@@ -89,6 +95,9 @@ gtime_sleep(const gtime_duration_t d);
 
 gtime_duration_t
 gtime_since(const gtime_t past);
+
+gtime_duration_t
+gtime_until(const gtime_t t);
 
 double
 gtime_dur_seconds(const gtime_duration_t d);

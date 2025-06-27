@@ -102,6 +102,19 @@ gtime_format(const gtime_t t, const char *layout, char *out, size_t out_size)
     strftime(out, out_size, layout, &tm);
 }
 
+uint8_t
+gtime_day(const gtime_t t)
+{
+    struct tm *timeinfo = localtime(&t.seconds);
+    return (uint8_t)timeinfo->tm_wday;
+}
+
+bool
+gtime_equal(const gtime_t t1, const gtime_t t2)
+{
+    return (t1.seconds == t2.seconds && t1.nanoseconds == t2.nanoseconds);
+}
+
 gtime_t
 gtime_add(const gtime_t t, const gtime_duration_t d)
 {
@@ -111,12 +124,6 @@ gtime_add(const gtime_t t, const gtime_duration_t d)
         .seconds = total / (int64_t)1e9,
         .nanoseconds = total % (int64_t)1e9
     };
-}
-
-gtime_duration_t
-gtime_duration_new(const int64_t d)
-{
-    return (gtime_duration_t)d;
 }
 
 gtime_duration_t
@@ -144,6 +151,19 @@ gtime_since(const gtime_t past)
     gtime_t now = gtime_now();
 
     return gtime_sub(now, past);
+}
+
+gtime_duration_t
+gtime_duration_new(const int64_t d)
+{
+    return (gtime_duration_t)d;
+}
+
+gtime_duration_t
+gtime_until(const gtime_t t)
+{
+    const gtime_t now = gtime_now();
+    return (gtime_duration_t)gtime_sub(t, now);
 }
 
 double
