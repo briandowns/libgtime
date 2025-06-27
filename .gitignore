@@ -1,0 +1,13 @@
+*.o
+*.so
+*.dynlib
+
+.vscode/*
+*.dSYM/
+bin/*
+tests/tests
+
+example
+
+libgtime.dylib
+libgtime.so
