@@ -72,6 +72,9 @@ gtime_unix(const gtime_t t);
 bool
 gtime_is_leap_year(int64_t year);
 
+/**
+ * Format the given time to a string with the given format.
+ */
 void
 gtime_format(const gtime_t t, const char *layout, char *out, size_t out_size);
 
@@ -84,6 +87,9 @@ gtime_equal(const gtime_t t1, const gtime_t t2);
 gtime_duration_t
 gtime_duration_new(const int64_t d);
 
+/**
+ * Adds the given duration to the gtime_t value.
+ */
 gtime_t
 gtime_add(const gtime_t t, const gtime_duration_t d);
 
